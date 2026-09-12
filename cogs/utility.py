@@ -140,12 +140,20 @@ class Utility(commands.Cog):
         self, interaction: discord.Interaction, user: Optional[discord.User] = None
     ) -> None:
         target = user or interaction.user
+        # Force a large size so the image always renders clearly
+        avatar_url = target.display_avatar.replace(size=1024).url
+
         embed = discord.Embed(
             title=f"{target.display_name}'s Avatar",
             color=discord.Color.blurple(),
             timestamp=datetime.now(timezone.utc),
         )
-        embed.set_image(url=target.display_avatar.url)
+        embed.set_image(url=avatar_url)
+        embed.add_field(
+            name="Links",
+            value=f"[Open avatar]({avatar_url})",
+            inline=False,
+        )
         embed.set_footer(text=f"Requested by {interaction.user}")
         await interaction.response.send_message(embed=embed)
 
